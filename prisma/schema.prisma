@@ -20,6 +20,8 @@ model User {
   emailVerified DateTime?
   image         String?
   projects      Project[]
+  sprints       Sprint[]
+  tasks         Task[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
@@ -83,6 +85,8 @@ model Sprint {
   projectId String
   tasks     Task[]
   status    SprintStatus @default(PLANNED)
+  owner    User     @relation(fields: [ownerEmail], references: [email], onDelete: Cascade)
+  ownerEmail  String
   startDate DateTime
   endDate   DateTime
 }
@@ -91,10 +95,12 @@ model Task {
   id        String   @id @default(cuid())
   title     String
   description String?
-  status    TaskStatus
+  status    TaskStatus 
   sprint    Sprint   @relation(fields: [sprintId], references: [id], onDelete: Cascade)
   sprintId  String
-  startedAt DateTime 
+  owner    User     @relation(fields: [ownerEmail], references: [email], onDelete: Cascade)
+  ownerEmail  String
+  startedAt DateTime? 
   finishedAt DateTime?
 }
 
