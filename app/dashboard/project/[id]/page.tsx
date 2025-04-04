@@ -316,10 +316,12 @@ export default function ProjectDetailsPage({params}: {params: {id: string}}) {
                       {/* Days calculation would be more precise in a real app */}
                       {Math.floor((new Date(sprint.endDate).getTime() - new Date(sprint.startDate).getTime()) / (1000 * 60 * 60 * 24))} days duration
                     </div>
+                    <Link href={`/dashboard/project/${projectId}/sprint/${sprint.id}`}>
                     <Button variant="ghost" size="sm" className="gap-1">
                       View Details
                       <ChevronRight className="h-4 w-4" />
                     </Button>
+                    </Link>
                   </div>
                 </CardContent>
               </Card>

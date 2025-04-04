@@ -1,4 +1,3 @@
-
 'use client'
 
 import React from 'react';
@@ -11,7 +10,8 @@ import {
   Layout, 
   ListTodo,
   Users, 
-  Bell
+  Bell,
+  Sparkles
 } from 'lucide-react';
 import AnimatedSection from '@/components/AnimatedSection';
 import FeatureCard from '@/components/FeatureCard';
@@ -34,12 +34,24 @@ const LandingPage = () => {
   return (
     <div className="flex flex-col min-h-[calc(100vh-4rem)]">
       {/* Hero Section */}
-      <section className="relative py-20 px-4 md:py-32 overflow-hidden">
+      <section className="relative py-24 md:py-40 px-4 overflow-hidden">
+        {/* Enhanced background elements */}
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/30 via-primary/5 to-background"></div>
+        <div className="absolute top-0 left-0 right-0 h-1/2 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/40 via-primary/10 to-transparent"></div>
+        
+        {/* Decorative elements */}
+        <div className="absolute top-20 right-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl -z-5"></div>
+        <div className="absolute bottom-10 left-10 w-32 h-32 bg-primary/20 rounded-full blur-2xl -z-5"></div>
+        
         <div className="container mx-auto flex flex-col lg:flex-row items-center justify-between gap-16">
           <AnimatedSection className="lg:w-1/2 text-center lg:text-left z-10">
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
+            <span className="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary mb-6">
+              <Sparkles className="w-3 h-3 mr-1" />
+              Your Personal Project Manager
+            </span>
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
               <span className="block">Manage Projects with</span>
-              <span className="text-primary">TaskFlow</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/70">SoloSprint</span>
             </h1>
             <p className="text-xl text-muted-foreground mb-8 max-w-md mx-auto lg:mx-0">
               Streamline your workflow, collaborate seamlessly, and boost productivity with our intuitive task management platform.
@@ -48,7 +60,7 @@ const LandingPage = () => {
               <Button 
                 size="lg" 
                 onClick={handleGetStarted}
-                className="gap-2"
+                className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:shadow-xl hover:shadow-primary/30"
               >
                 Get Started
                 <ArrowRight className="w-4 h-4" />
@@ -57,6 +69,7 @@ const LandingPage = () => {
                 variant="outline" 
                 size="lg"
                 onClick={() => navigate.push('/features')}
+                className="border-primary/20 hover:bg-primary/5"
               >
                 Learn More
               </Button>
@@ -73,21 +86,35 @@ const LandingPage = () => {
             </div>
           </AnimatedSection>
           
-          <AnimatedSection className="lg:w-1/2" delay={0.2}>
-            <HeroImage />
+          <AnimatedSection className="lg:w-1/2 relative" delay={0.2}>
+            {/* Glass card effect around the hero image */}
+            <div className="absolute inset-0 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 shadow-xl -z-10"></div>
+            <motion.div 
+              initial={{ y: 10 }}
+              animate={{ y: -10 }}
+              transition={{ 
+                repeat: Infinity, 
+                repeatType: "reverse", 
+                duration: 3,
+                ease: "easeInOut" 
+              }}
+              className="p-4"
+            >
+              <HeroImage />
+            </motion.div>
           </AnimatedSection>
         </div>
-        
-        {/* Background gradient */}
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/20 via-background to-background"></div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-4 bg-muted/30">
+      <section className="py-24 px-4 bg-gradient-to-b from-background to-muted/30">
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <AnimatedSection>
-              <h2 className="text-3xl font-bold mb-4">Powerful Features</h2>
+              <span className="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary mb-4">
+                Why Choose SoloSprint
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Powerful Features</h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
                 Everything you need to manage your projects effectively and collaborate with your team seamlessly.
               </p>
@@ -131,23 +158,23 @@ const LandingPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-primary/5">
+      <section className="py-24 px-4">
         <div className="container mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="bg-card border border-border/60 rounded-xl p-8 md:p-12 shadow-sm max-w-4xl mx-auto text-center"
+            className="bg-gradient-to-br from-primary/10 to-primary/5 backdrop-blur-sm rounded-2xl p-10 md:p-16 shadow-xl max-w-4xl mx-auto text-center border border-primary/10"
           >
-            <h2 className="text-3xl font-bold mb-4">Ready to Boost Your Productivity?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Boost Your Productivity?</h2>
             <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Join thousands of teams who have transformed their workflow with TaskFlow.
+              Join thousands of teams who have transformed their workflow with SoloSprint.
             </p>
             <Button 
               size="lg" 
               onClick={handleGetStarted}
-              className="gap-2"
+              className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:shadow-xl hover:shadow-primary/30"
             >
               Get Started Now
               <ArrowRight className="w-4 h-4" />
@@ -157,15 +184,15 @@ const LandingPage = () => {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-4 border-t">
+      <footer className="py-12 px-4 border-t bg-muted/10">
         <div className="container mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center mb-4 md:mb-0">
-              <Layout className="h-5 w-5 text-primary mr-2" />
-              <span className="font-semibold">TaskFlow</span>
+              <Layout className="h-6 w-6 text-primary mr-2" />
+              <span className="font-bold text-lg">SoloSprint</span>
             </div>
             <div className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} TaskFlow. All rights reserved.
+              © {new Date().getFullYear()} SoloSprint. All rights reserved.
             </div>
           </div>
         </div>
