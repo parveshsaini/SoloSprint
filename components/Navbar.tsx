@@ -6,13 +6,8 @@ import { PanelLeft, Home, LogIn, LogOut, Menu, X, User } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import ThemeToggler from "./ui/theme-toggler";
 
-interface NavbarProps {
-  isAuthenticated: boolean;
-  userName?: string;
-  userImage?: string;
-  onSignOut: () => void;
-}
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -31,24 +26,14 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
+          <ThemeToggler/>
           <Link
             href="/"
             className="text-sm font-medium transition-colors hover:text-primary"
           >
             Home
           </Link>
-          <Link
-            href="/features"
-            className="text-sm font-medium transition-colors hover:text-primary"
-          >
-            Features
-          </Link>
-          <Link
-            href="/pricing"
-            className="text-sm font-medium transition-colors hover:text-primary"
-          >
-            Pricing
-          </Link>
+          
           {status == 'authenticated' ? (
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">

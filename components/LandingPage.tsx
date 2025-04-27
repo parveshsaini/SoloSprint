@@ -34,7 +34,7 @@ const LandingPage = () => {
   return (
     <div className="flex flex-col min-h-[calc(100vh-4rem)]">
       {/* Hero Section */}
-      <section className="relative py-24 md:py-40 px-4 overflow-hidden">
+      <section className="relative py-24 px-4 overflow-hidden">
         {/* Enhanced background elements */}
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/30 via-primary/5 to-background"></div>
         <div className="absolute top-0 left-0 right-0 h-1/2 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/40 via-primary/10 to-transparent"></div>
@@ -49,9 +49,10 @@ const LandingPage = () => {
               <Sparkles className="w-3 h-3 mr-1" />
               Your Personal Project Manager
             </span>
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 space-y-4">
               <span className="block">Manage Projects with</span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/70">SoloSprint</span>
+              <span className=" text-transparent bg-clip-text bg-gradient-to-b from-primary to-primary/70">SoloSprint</span>
+              <span className='inline'>👟</span>
             </h1>
             <p className="text-xl text-muted-foreground mb-8 max-w-md mx-auto lg:mx-0">
               Streamline your workflow, collaborate seamlessly, and boost productivity with our intuitive task management platform.
