@@ -40,9 +40,9 @@ const LandingPage = () => {
         <div className="absolute top-0 left-0 right-0 h-1/2 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/40 via-primary/10 to-transparent"></div>
         
         {/* Decorative elements */}
-        <div className="absolute top-20 right-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl -z-5"></div>
+        {/* <div className="absolute top-20 right-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl -z-5"></div>
         <div className="absolute bottom-10 left-10 w-32 h-32 bg-primary/20 rounded-full blur-2xl -z-5"></div>
-        
+         */}
         <div className="container mx-auto flex flex-col lg:flex-row items-center justify-between gap-16">
           <AnimatedSection className="lg:w-1/2 text-center lg:text-left z-10">
             <span className="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary mb-6">

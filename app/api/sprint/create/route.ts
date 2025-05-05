@@ -9,7 +9,7 @@ export async function POST (req: NextRequest) {
         return NextResponse.json({msg: 'Unauthorised'}, {status: 401})
 
     const body = await req.json()
-    const {title, startDate, endDate, projectId} = body
+    const {title, startDate, endDate, projectId, startingThoughts} = body
 
     //TODO: input validation
 
@@ -20,6 +20,7 @@ export async function POST (req: NextRequest) {
             endDate,
             projectId,
             ownerEmail: session.user?.email!,
+            startingThoughts
         }
     })
 

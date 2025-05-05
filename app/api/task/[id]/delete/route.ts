@@ -7,7 +7,7 @@ interface Props {
     params: {id: string}
 }
 
-export default async function DELETE (req: NextRequest, {params}: Props) {
+export  async function DELETE (req: NextRequest, {params}: Props) {
     const session = await getServerSession(authOptions)
     if(!session)
         return NextResponse.json({msg: 'Unauthorised'}, {status: 401})

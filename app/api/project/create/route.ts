@@ -10,14 +10,14 @@ export async function POST (req: NextRequest) {
 
 
     const body = await req.json()
-    const {title, imageUrl} = body
+    const {title, description} = body
 
     //TODO: input validation
 
     const project  = await prisma.project.create({
         data: {
             title,
-            imageUrl: imageUrl? imageUrl : null,
+            description: description,
             ownerEmail: session.user?.email!,
         }
     })

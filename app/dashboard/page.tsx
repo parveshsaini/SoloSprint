@@ -1,96 +1,101 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { 
-  Plus, 
-  CalendarRange, 
-  Users2, 
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Plus,
+  CalendarRange,
+  Users2,
+  LoaderCircle,
   MoreVertical,
-  Search
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger 
-} from '@/components/ui/dropdown-menu';
-import AnimatedSection from '@/components/AnimatedSection';
-
-// Mock data for projects
-const mockProjects = [
-  {
-    id: "1",
-    name: "E-commerce Platform",
-    description: "A comprehensive e-commerce solution with payment integration",
-    members: 5,
-    sprints: 3,
-    lastUpdated: "2023-04-01T10:00:00Z"
-  },
-  {
-    id: "2",
-    name: "Mobile App Redesign",
-    description: "UI/UX overhaul of our flagship mobile application",
-    members: 3,
-    sprints: 2,
-    lastUpdated: "2023-03-28T14:30:00Z"
-  },
-  {
-    id: "3",
-    name: "CRM System",
-    description: "Customer relationship management system for sales team",
-    members: 4,
-    sprints: 1,
-    lastUpdated: "2023-04-02T09:15:00Z"
-  },
-  {
-    id: "4",
-    name: "API Modernization",
-    description: "Modernize legacy APIs with RESTful architecture",
-    members: 2,
-    sprints: 4,
-    lastUpdated: "2023-03-25T11:20:00Z"
-  }
-];
+  Search,
+} from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import AnimatedSection from "@/components/AnimatedSection";
+import { Label } from "@/components/ui/label";
+import axios from "axios";
+import { Project } from "@prisma/client";
 
 export default function DashboardPage() {
   const navigate = useRouter();
-  const [projects, setProjects] = useState(mockProjects);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredProjects = projects.filter(project => 
-    project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    project.description.toLowerCase().includes(searchQuery.toLowerCase())
+  const [showCreateProjectDialog, setShowCreateProjectDialog] = useState(false);
+  const [newProjectTitle, setNewProjectTitle] = useState("");
+  const [newProjectDescription, setNewProjectDescription] = useState("");
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const filteredProjects = projects.filter(
+    (project) =>
+      project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      project.description?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleProjectClick = (id: string) => {
+    console.log("navigating now ", id);
     navigate.push(`/dashboard/project/${id}`);
   };
 
-  const handleCreateProject = () => {
-    // For demo purposes, we'll just add a new project to the list
-    const newProject = {
-      id: (projects.length + 1).toString(),
-      name: `New Project ${projects.length + 1}`,
-      description: "A fresh project ready for your ideas",
-      members: 1,
-      sprints: 0,
-      lastUpdated: new Date().toISOString()
-    };
-    
-    setProjects([...projects, newProject]);
+  const handleProjectDelete = async(id: string)=>{
+    await axios.delete(`/api/project/${id}/delete`)
+    fetchProjects()
+  }
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const fetchProjects = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get<Project[]>("/api/project");
+      setProjects(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.log("error fetching projects", error);
+    }
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    }).format(date);
+  const handleCreateProject = async () => {
+    const data = {
+      title: newProjectTitle,
+      description: newProjectDescription,
+    };
+
+    try {
+      const response = await axios.post<Project>("/api/project/create", data);
+      setProjects([...projects, response.data]);
+    } catch (error) {
+      console.log(error);
+    }
+
+    setShowCreateProjectDialog(false);
+    setNewProjectDescription("");
+    setNewProjectTitle("");
   };
 
   return (
@@ -103,10 +108,62 @@ export default function DashboardPage() {
               Manage and track all your projects in one place
             </p>
           </div>
-          <Button onClick={handleCreateProject} className="gap-2">
-            <Plus size={16} />
-            Create Project
-          </Button>
+
+          <Dialog
+            open={showCreateProjectDialog}
+            onOpenChange={setShowCreateProjectDialog}
+          >
+            <DialogTrigger asChild>
+              <Button className="gap-2">
+                <Plus size={16} />
+                Create Project
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Create New Project</DialogTitle>
+                <DialogDescription>
+                  Add the project details below.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="space-y-2">
+                  <Label htmlFor="project-name">Project Name</Label>
+                  <Input
+                    id="project-name"
+                    placeholder="Enter project name"
+                    value={newProjectTitle}
+                    onChange={(e) => setNewProjectTitle(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="grid gap-4 py-4">
+                <div className="space-y-2">
+                  <Label htmlFor="project-desc">Project Name</Label>
+                  <Input
+                    id="project-desc"
+                    placeholder="Enter project description"
+                    value={newProjectDescription}
+                    onChange={(e) => setNewProjectDescription(e.target.value)}
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={() => setShowCreateProjectDialog(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleCreateProject}
+                  disabled={!newProjectTitle || !newProjectDescription}
+                >
+                  Create Project
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </AnimatedSection>
 
@@ -125,45 +182,46 @@ export default function DashboardPage() {
       </AnimatedSection>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredProjects.map((project, index) => (
-          <AnimatedSection key={project.id} delay={0.1 * (index + 1)}>
-            <Card className="h-full hover:shadow-md transition-shadow cursor-pointer" onClick={() => handleProjectClick(project.id)}>
-              <CardHeader className="flex flex-row items-start justify-between pb-2">
-                <CardTitle className="text-xl">{project.name}</CardTitle>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                      <MoreVertical className="h-4 w-4" />
-                      <span className="sr-only">Menu</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem>Edit</DropdownMenuItem>
-                    <DropdownMenuItem>Duplicate</DropdownMenuItem>
-                    <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4 line-clamp-2">{project.description}</p>
-                <div className="flex flex-wrap gap-4 text-sm">
-                  <div className="flex items-center gap-1">
-                    <Users2 className="h-4 w-4 text-muted-foreground" />
-                    <span>{project.members} members</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <CalendarRange className="h-4 w-4 text-muted-foreground" />
-                    <span>{project.sprints} sprints</span>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter className="text-sm text-muted-foreground">
-                Updated on {formatDate(project.lastUpdated)}
-              </CardFooter>
-            </Card>
-          </AnimatedSection>
-        ))}
+        {!loading &&
+          filteredProjects.map((project, index) => (
+            <AnimatedSection key={index} delay={0.1 * (index + 1)}>
+              <Card
+                className="h-full hover:shadow-md transition-shadow cursor-pointer"
+                onClick={() => handleProjectClick(project.id)}
+              >
+                <CardHeader className="flex flex-row items-start justify-between pb-2">
+                  <CardTitle className="text-xl">{project.title}</CardTitle>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger
+                      asChild
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <MoreVertical className="h-4 w-4" />
+                        <span className="sr-only">Menu</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem>Edit</DropdownMenuItem>
+                      <DropdownMenuItem className="text-destructive"  onClick={(e) =>{
+                        handleProjectDelete(project.id)
+                        e.stopPropagation(); 
+                        }}>
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </CardHeader>
+ 
+              </Card>
+            </AnimatedSection>
+          ))}
       </div>
+      {loading && (
+        <div className="flex items-center justify-center mt-8">
+          <LoaderCircle className="animate-spin h-12 w-12 text-muted-foreground" />
+        </div>
+      )}
     </div>
   );
 }

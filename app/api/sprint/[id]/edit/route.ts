@@ -14,7 +14,7 @@ export default async function PATCH (req: NextRequest, {params}: Props) {
 
     const body = await req.json()
 
-    const {title, startDate, endDate, status} = body
+    const {title, startDate, endDate, status, startingThoughts, endingThoughts} = body
 
     const sprint = await prisma.project.findUnique({
         where: {
@@ -34,7 +34,9 @@ export default async function PATCH (req: NextRequest, {params}: Props) {
             title,
             startDate,
             endDate,
-            status
+            status,
+            startingThoughts,
+            endingThoughts
         }
     })
 

@@ -14,7 +14,7 @@ export default async function PATCH (req: NextRequest, {params}: Props) {
 
     const body = await req.json()
 
-    const {title, imageUrl} = body
+    const {title, description} = body
 
     const project = await prisma.project.findUnique({
         where: {
@@ -32,7 +32,7 @@ export default async function PATCH (req: NextRequest, {params}: Props) {
         },
         data: {
             title,
-            imageUrl
+            description
         }
     })
 
